@@ -1,0 +1,28 @@
+name: release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: make release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          test -f "dist/$TAG/version.json" || { echo "dist/$TAG/version.json missing"; exit 1; }
+          python3 - <<'PY'
+          import hashlib, json, os
+          tag = os.environ['TAG']; d = 'dist/' + tag
+          m = json.load(open(d + '/version.json', encoding='utf-8'))
+          assert m['app'] == 'InnoPlayer' and 'v' + m['version'] == tag, (m.get('app'), m.get('version'), tag)
+          data = b''.join(open('%s/%s.part%d' % (d, m['part_prefix'], i), 'rb').read() for i in range(1, m['parts'] + 1))
+          assert len(data) == m['enc_size'] and hashlib.sha256(data).hexdigest() == m['enc_sha256'], 'parts do not match version.json'
+          assert data[:8] == b'INNOPKG1', 'not an encrypted INNO package'
+          print('verified', tag, m['parts'], 'parts')
+          PY
+          gh release create "$TAG" dist/$TAG/* --title "$TAG" --latest --notes "INNO Player $TAG"

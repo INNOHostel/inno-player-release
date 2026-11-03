@@ -1,0 +1,16 @@
+{
+ "app": "InnoPlayer",
+ "version": "1.4",
+ "enc_sha256": "e8bb0e83697df8be2f86271760d38ea41b3681a310587717cb8ad4aad1554368",
+ "enc_size": 207096,
+ "zip_sha256": "2a28de70b69d8164b9ced7a066b5a0e9a05730a76700dadc9146168fe905158b",
+ "zip_size": 207029,
+ "parts": 1,
+ "part_prefix": "InnoPlayer_v1.4",
+ "built": "2026-11-03",
+ "notes": [
+  "YouTube 자체 영화관 모드 적용 및 강제 플레이어 CSS 제거",
+  "오른쪽 검은 화면에 대비한 선택형 Chrome 소프트웨어 렌더링",
+  "기존 설정과 로그인 프로필 유지"
+ ]
+}
